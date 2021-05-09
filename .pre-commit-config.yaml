@@ -23,5 +23,4 @@ repos:
       - language: system
         name: kics
         id: kics
-        entry: kics
-        files: .*\.tf$
+        entry: kics scan -p .
