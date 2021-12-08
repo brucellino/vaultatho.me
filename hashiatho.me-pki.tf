@@ -35,3 +35,14 @@ resource "vault_pki_secret_backend_config_urls" "hah_urls" {
     "${var.vault_addr}/v1/PKI/hashiatho.me/crl"
   ]
 }
+
+
+# Intermediate certificate for H@H
+resource "vault_mount" "hah_intermediate" {
+  path        = "PKI/hashiatho.me-intermediate"
+  description = "Intermediate CA for Hashi at home services"
+  type        = "pki"
+
+  default_lease_ttl_seconds = "604800"
+  max_lease_ttl_seconds     = "315360000"
+}
