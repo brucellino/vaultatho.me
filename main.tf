@@ -9,6 +9,7 @@ terraform {
 
 provider "vault" {
   # Configuration options
+  address            = var.vault_addr
   add_address_to_env = true
   skip_tls_verify    = true
 }
