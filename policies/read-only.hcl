@@ -1,3 +1,3 @@
-path "secret/data/hashatho.me/*" {
+path "hashiatho.me/data/*" {
   capabilities = ["read"]
 }
