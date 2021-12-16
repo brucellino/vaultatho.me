@@ -24,3 +24,18 @@ path "sys/policies/acl/*" {
 path "secret/data/hashiatho.me/*" {
   capabilities = ["create", "read", "update", "delete", "list"]
 }
+
+# Policy to manage secrets engines
+path "sys/mounts/*" {
+  capabilities = ["create", "read", "update", "delete", "list"]
+}
+
+# List enabled secrets engines
+path "sys/mounts" {
+  capabilities = ["read", "list"]
+}
+
+# Work with PKI secrets engine
+path "PKI/hashiatho.me" {
+  capabilities = ["create", "read", "update", "delete", "list", "sudo"]
+}
