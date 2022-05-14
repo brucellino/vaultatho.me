@@ -11,8 +11,6 @@ repos:
   - repo: https://github.com/python-jsonschema/check-jsonschema
     rev: 0.15.0
     hooks:
-      - id: check-github-actions
-        files: ^\.github/workflows/
       - id: check-github-workflows
         files: ^\.github/workflows/
   - repo: https://github.com/antonbabenko/pre-commit-terraform
