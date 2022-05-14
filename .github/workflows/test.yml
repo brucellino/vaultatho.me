@@ -43,6 +43,7 @@ jobs:
       - name: Plan
         run: |
           VAULT_TOKEN=$(cat ~/.vault-token) \
+          TF_VAR_vault_addr=http://localhost:8200 \
           terraform plan
       - name: stop Vault
         run: kill $(jobs -p)
