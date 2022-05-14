@@ -1,0 +1,30 @@
+name: Test
+on:
+  pull_request:
+    types:
+      - opened
+      - reopened
+  push:
+    branches:
+      - main
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Get curl and zip
+        run: apt-get install -y curl unzip jq
+      - name: Get Vault
+        run: curl -L https://releases.hashicorp.com/vault/1.10.3/vault_1.10.3_linux_amd64.zip | unzip -> ~/vault
+      - name: Make vault executable
+        run: chmod +x ~/vault
+      - name: Start Vault dev server
+        run: ~/vault server -dev &
+      - name: Plan
+        run: VAULT_TOKEN=$(cat ~/.vault-token) terraform plan
+      - name: stop Vault
+        run: kill $(jobs -p)
