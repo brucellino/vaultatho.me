@@ -13,6 +13,10 @@ jobs:
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
+      - name: init terraform
+        run: terraform init
+      - name: validate terraform
+        run: terraform validate
       - name: Get curl and zip
         run: sudo apt-get install -y curl unzip jq
       - name: Get Vault
