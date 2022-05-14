@@ -46,4 +46,4 @@ jobs:
           TF_VAR_vault_addr=http://localhost:8200 \
           terraform plan
       - name: stop Vault
-        run: kill $(jobs -p)
+        run: kill -9 $(jobs -p)
