@@ -39,7 +39,7 @@ jobs:
       - name: Start Vault dev server
         run: ~/vault server -dev &
       - name: init terraform
-        run: terraform init --backend=false
+        run: terraform init
       - name: Plan
         run: |
           VAULT_TOKEN=$(cat ~/.vault-token) \
