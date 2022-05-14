@@ -71,9 +71,33 @@ resource "vault_pki_secret_backend_root_sign_intermediate" "hah_int_sign" {
   backend     = vault_mount.hah_pki.path
   csr         = vault_pki_secret_backend_intermediate_cert_request.hah_pki_int.csr
   common_name = "Vault@Home Intermediate Authority"
+  ttl         = "315360000"
 }
 
 resource "vault_pki_secret_backend_intermediate_set_signed" "hah_int" {
   backend     = vault_mount.hah_pki_int.path
   certificate = vault_pki_secret_backend_root_sign_intermediate.hah_int_sign.certificate
+}
+
+
+# H@H Intermediate CA role
+resource "vault_pki_secret_backend_role" "hah_int_role" {
+  backend = vault_mount.hah_pki_int.path
+  name    = "hah_int_role"
+  key_usage = [
+    "DigitalSignature",
+    "KeyEncipherment",
+    "KeyAgreement"
+  ]
+  allowed_domains = [
+    "*.service.consul",
+    "*.node.consul",
+    "*.hashiatho.me",
+    "*.station"
+  ]
+
+  allow_bare_domains = true
+  allow_subdomains   = true
+  allow_glob_domains = true
+  allow_ip_sans      = true
 }
