@@ -5,6 +5,17 @@ on:
       - main
 
 jobs:
+  vpn:
+    name: setup Tailscale
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get Tailscale
+        run: curl -fsSL https://tailscale.com/install.sh | sh
+      - name: Start tailscale
+        run: sudo tailscale up --authkey "${TAILSCALE_AUTHKEY}"
+        env:
+          TAILSCALE_AUTHKEY: ${{ secrets.TAILSCALE_AUTHKEY }}
+
   validate:
     name: Test
     runs-on: ubuntu-latest
