@@ -1,11 +1,9 @@
 name: Test
 on:
   pull_request:
-    types:
-      - opened
-      - reopened
     branches:
       - main
+
 jobs:
   test:
     name: Test
@@ -18,7 +16,7 @@ jobs:
       - name: Get curl and zip
         run: sudo apt-get install -y curl unzip jq
       - name: Get Vault
-        run: curl -L https://releases.hashicorp.com/vault/1.10.3/vault_1.10.3_linux_amd64.zip | unzip -> ~/vault
+        run: curl -L https://releases.hashicorp.com/vault/1.10.3/vault_1.10.3_linux_amd64.zip | gunzip -> ~/vault
       - name: Make vault executable
         run: chmod +x ~/vault
       - name: Start Vault dev server
