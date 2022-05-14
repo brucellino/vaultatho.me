@@ -5,7 +5,7 @@ on:
       - main
 
 jobs:
-  test:
+  validate:
     name: Test
     runs-on: ubuntu-latest
     steps:
@@ -14,9 +14,14 @@ jobs:
         with:
           fetch-depth: 0
       - name: init terraform
-        run: terraform init
+        run: terraform init --backend=false
       - name: validate terraform
         run: terraform validate
+
+  vault_server:
+    name: Vault Server
+    runs-on: ubuntu-latest
+    steps:
       - name: Get curl and zip
         run: sudo apt-get install -y curl unzip jq
       - name: Get Vault
@@ -25,6 +30,8 @@ jobs:
         run: chmod +x ~/vault
       - name: Start Vault dev server
         run: ~/vault server -dev &
+      - name: init terraform
+        run: terraform init --backend=false
       - name: Plan
         run: VAULT_TOKEN=$(cat ~/.vault-token) terraform plan
       - name: stop Vault
