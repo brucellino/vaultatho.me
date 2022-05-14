@@ -22,6 +22,10 @@ jobs:
     name: Vault Server
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
       - name: Get curl and zip
         run: sudo apt-get install -y curl unzip jq
       - name: Get Vault
