@@ -18,9 +18,16 @@ jobs:
       - name: validate terraform
         run: terraform validate
 
-  vault_server:
-    name: Vault Server
+  apply:
+    name: Terraform Apply
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        vault_version:
+          - 1.10.3
+          - 1.10.2
+          - 1.10.1
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -45,5 +52,5 @@ jobs:
           VAULT_TOKEN=$(cat ~/.vault-token) \
           TF_VAR_vault_addr=http://localhost:8200 \
           terraform plan
-      - name: stop Vault
-        run: kill -9 $(jobs -p)
+      # - name: stop Vault
+      #   run: kill -9 $(jobs -p)
