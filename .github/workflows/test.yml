@@ -28,15 +28,21 @@ jobs:
           fetch-depth: 0
       - name: Get curl and zip
         run: sudo apt-get install -y curl unzip jq
+      - name: Get Consul
+        run: curl -L https://releases.hashicorp.com/consul/1.12.0/consul_1.12.0_linux_amd64.zip | gunzip -> ~/consul
       - name: Get Vault
         run: curl -L https://releases.hashicorp.com/vault/1.10.3/vault_1.10.3_linux_amd64.zip | gunzip -> ~/vault
-      - name: Make vault executable
-        run: chmod +x ~/vault
+      - name: Make vault and consul executable
+        run: chmod +x ~/vault ~/consul
+      - name: Start Consul dev server
+        run: ~/consul agent -dev &
       - name: Start Vault dev server
         run: ~/vault server -dev &
       - name: init terraform
         run: terraform init --backend=false
       - name: Plan
-        run: VAULT_TOKEN=$(cat ~/.vault-token) terraform --backend=false plan
+        run: |
+          VAULT_TOKEN=$(cat ~/.vault-token) \
+          terraform plan
       - name: stop Vault
         run: kill $(jobs -p)
