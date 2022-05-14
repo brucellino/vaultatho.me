@@ -28,6 +28,10 @@ jobs:
           - 1.10.3
           - 1.10.2
           - 1.10.1
+        consul_version:
+          - 1.12.0
+          - 1.11.5
+          - 1.10.10
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -36,9 +40,9 @@ jobs:
       - name: Get curl and zip
         run: sudo apt-get install -y curl unzip jq
       - name: Get Consul
-        run: curl -L https://releases.hashicorp.com/consul/1.12.0/consul_1.12.0_linux_amd64.zip | gunzip -> ~/consul
+        run: curl -L https://releases.hashicorp.com/consul/${{ matrix.consul_version }}/consul_${{ matrix.consul_version }}_linux_amd64.zip | gunzip -> ~/consul
       - name: Get Vault
-        run: curl -L https://releases.hashicorp.com/vault/1.10.3/vault_1.10.3_linux_amd64.zip | gunzip -> ~/vault
+        run: curl -L https://releases.hashicorp.com/vault/${{ matrix.vault_version }}/vault_${{ matrix.vault_version }}_linux_amd64.zip | gunzip -> ~/vault
       - name: Make vault and consul executable
         run: chmod +x ~/vault ~/consul
       - name: Start Consul dev server
