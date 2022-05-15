@@ -5,7 +5,7 @@ on:
       - main
 jobs:
   release:
-    needs: [test]
+    needs: [validate]
     name: Release
     runs-on: ubuntu-latest
     steps:
