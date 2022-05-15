@@ -18,7 +18,7 @@ repos:
     hooks:
       - id: terraform_fmt
       - id: terraform_docs
-      - id: checkov
+      - id: terraform_checkov
   - repo: https://github.com/alessandrojcm/commitlint-pre-commit-hook
     rev: v8.0.0
     hooks:
