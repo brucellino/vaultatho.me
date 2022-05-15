@@ -11,7 +11,7 @@ resource "vault_auth_backend" "auto_auth_approle" {
   }
 }
 
-# Catch-all role for approle auth
+# Catch-all role for approle auth bound to access point CIDR
 resource "vault_approle_auth_backend_role" "catch_all" {
   backend               = vault_auth_backend.auto_auth_approle.path
   role_name             = "catch-all"
