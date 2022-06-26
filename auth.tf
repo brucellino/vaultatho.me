@@ -11,6 +11,30 @@ resource "vault_auth_backend" "auto_auth_approle" {
   }
 }
 
+resource "vault_auth_backend" "gh_approle" {
+  type        = "approle"
+  path        = "github-runners"
+  description = "Approle for Github Actions runners"
+
+  tune {
+    default_lease_ttl = "10m"
+    max_lease_ttl     = "10m"
+    token_type        = "service"
+  }
+}
+# We need to get the ip ranges of github actions ips from github
+# in order to bind the approle cidrs later.
+data "github_ip_ranges" "actions" {}
+
+# Role for  github actions runners. They should read only
+resource "vault_approle_auth_backend_role" "aws" {
+  backend               = vault_auth_backend.gh_approle.path
+  role_name             = "aws"
+  secret_id_bound_cidrs = data.github_ip_ranges.actions.actions_ipv4
+  token_policies        = [vault_policy.aws.name]
+
+}
+
 # Catch-all role for approle auth bound to access point CIDR
 resource "vault_approle_auth_backend_role" "catch_all" {
   backend               = vault_auth_backend.auto_auth_approle.path
