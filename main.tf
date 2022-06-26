@@ -5,6 +5,16 @@ terraform {
     datacenter = "dc1"
     path       = "hashiatho.me/vault"
   }
+  required_providers {
+    vault = {
+      source  = "hashicorp/vault"
+      version = "3.7.0"
+    }
+    github = {
+      source  = "integrations/github"
+      version = "4.26.1"
+    }
+  }
 }
 
 provider "vault" {
