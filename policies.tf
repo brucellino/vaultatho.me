@@ -7,3 +7,9 @@ resource "vault_policy" "admin" {
   name   = "admin"
   policy = file("${path.module}/policies/admin.hcl")
 }
+
+# policy to read aws credentials. Generally scoped to A cloud guru playgrounds
+resource "vault_policy" "aws" {
+  name   = "aws_acg"
+  policy = file("${path.module}/policies/aws_acg.hcl")
+}
