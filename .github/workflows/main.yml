@@ -71,7 +71,7 @@ jobs:
       # - name: stop Vault
       #   run: kill -9 $(jobs -p)
   release:
-    needs: [validate]
+    needs: [apply]
     name: Release
     runs-on: ubuntu-latest
     steps:
