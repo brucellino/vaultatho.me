@@ -9,12 +9,12 @@ repos:
       - id: check-yaml
       - id: check-added-large-files
   - repo: https://github.com/python-jsonschema/check-jsonschema
-    rev: 0.17.0
+    rev: 0.17.1
     hooks:
       - id: check-github-workflows
         files: ^\.github/workflows/
   - repo: https://github.com/antonbabenko/pre-commit-terraform
-    rev: v1.73.0
+    rev: v1.74.1
     hooks:
       - id: terraform_fmt
       - id: terraform_docs
@@ -30,7 +30,7 @@ repos:
       - language: system
         name: kics
         id: kics
-        entry: kics scan -p .
+        entry: kics scan -p . -v -t terraform
 ci:
   autofix_commit_msg: |
     [pre-commit.ci] auto fixes from pre-commit.com hooks
