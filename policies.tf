@@ -13,3 +13,8 @@ resource "vault_policy" "aws" {
   name   = "aws_acg"
   policy = file("${path.module}/policies/aws_acg.hcl")
 }
+
+resource "vault_policy" "consul" {
+  name   = "consul"
+  policy = file("${path.module}/policies/consul.hcl")
+}

@@ -92,6 +92,7 @@ resource "vault_pki_secret_backend_role" "hah_int_role" {
   allowed_domains = [
     "*.service.consul",
     "*.node.consul",
+    "*.node.dc1.consul",
     "*.hashiatho.me",
     "*.station"
   ]

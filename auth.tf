@@ -42,16 +42,26 @@ resource "vault_approle_auth_backend_role" "catch_all" {
   secret_id_bound_cidrs = ["192.168.1.1/24"]
   token_policies        = ["default"]
   token_num_uses        = 0
+  bind_secret_id        = false
 }
 
-# Add secret ID for the catch-all role
-resource "vault_approle_auth_backend_role_secret_id" "catch_all_id" {
-  backend      = vault_auth_backend.auto_auth_approle.path
-  role_name    = vault_approle_auth_backend_role.catch_all.role_name
-  wrapping_ttl = "120s"
-  metadata     = <<EOT
-{
-  "hello": "world"
+resource "vault_approle_auth_backend_role" "consul" {
+  backend               = vault_auth_backend.auto_auth_approle.path
+  role_name             = "consul-secrets"
+  secret_id_bound_cidrs = ["192.168.1.1/24"]
+  token_policies        = ["consul"]
+  token_num_uses        = 0
+  bind_secret_id        = false
 }
-EOT
-}
+
+# # Add secret ID for the catch-all role
+# resource "vault_approle_auth_backend_role_secret_id" "catch_all_id" {
+#   backend      = vault_auth_backend.auto_auth_approle.path
+#   role_name    = vault_approle_auth_backend_role.catch_all.role_name
+#   wrapping_ttl = "120s"
+#   metadata     = <<EOT
+# {
+#   "hello": "world"
+# }
+# EOT
+# }
