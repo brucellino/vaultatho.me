@@ -59,7 +59,7 @@ resource "vault_approle_auth_backend_role" "consul" {
   secret_id_bound_cidrs = ["192.168.1.1/24"]
   token_policies        = ["consul"]
   token_num_uses        = 0
-  bind_secret_id        = true
+  bind_secret_id        = false
 }
 
 # # Add secret ID for the catch-all role
