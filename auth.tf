@@ -37,12 +37,20 @@ resource "vault_approle_auth_backend_role" "aws" {
 
 # Catch-all role for approle auth bound to access point CIDR
 resource "vault_approle_auth_backend_role" "catch_all" {
-  backend               = vault_auth_backend.auto_auth_approle.path
-  role_name             = "catch-all"
+  backend   = vault_auth_backend.auto_auth_approle.path
+  role_name = "catch-all"
+
   secret_id_bound_cidrs = ["192.168.1.1/24"]
-  token_policies        = ["default"]
-  token_num_uses        = 0
+  secret_id_ttl         = 600
   bind_secret_id        = false
+
+  # token arguments
+  token_policies = ["default"]
+  token_num_uses = 5
+  token_ttl      = 3600
+  token_max_ttl  = 10800
+  token_type     = "service"
+
 }
 
 resource "vault_approle_auth_backend_role" "consul" {
@@ -51,7 +59,7 @@ resource "vault_approle_auth_backend_role" "consul" {
   secret_id_bound_cidrs = ["192.168.1.1/24"]
   token_policies        = ["consul"]
   token_num_uses        = 0
-  bind_secret_id        = false
+  bind_secret_id        = true
 }
 
 # # Add secret ID for the catch-all role
