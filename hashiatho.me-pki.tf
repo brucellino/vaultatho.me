@@ -1,6 +1,6 @@
 # CA for Hashi at home
 resource "vault_mount" "hah_pki" {
-  path        = "PKI/hah"
+  path        = "pki_hah"
   description = "CA for Hashi at home services"
   type        = "pki"
 
@@ -29,17 +29,17 @@ resource "vault_pki_secret_backend_root_cert" "root_cert" {
 resource "vault_pki_secret_backend_config_urls" "hah_urls" {
   backend = vault_mount.hah_pki.path
   issuing_certificates = [
-    "${var.vault_addr}/v1/PKI/hah/ca"
+    "${var.vault_addr}/v1/${vault_mount.hah_pki.path}/ca"
   ]
   crl_distribution_points = [
-    "${var.vault_addr}/v1/PKI/hah/crl"
+    "${var.vault_addr}/v1/${vault_mount.hah_pki.path}/crl"
   ]
 }
 
 
 # Intermediate certificate for H@H
 resource "vault_mount" "hah_pki_int" {
-  path        = "PKI/hah_int"
+  path        = "pki_hah_int"
   description = "Intermediate CA for Hashi at home services"
   type        = "pki"
 
@@ -62,7 +62,7 @@ resource "vault_pki_secret_backend_intermediate_cert_request" "hah_pki_int" {
   organization         = "H@H"
   country              = "IT"
   locality             = "Catania"
-  ip_sans              = ["192.168.1.16"]
+  ip_sans              = ["192.168.1.14"]
 }
 
 # signed cert.
@@ -101,4 +101,15 @@ resource "vault_pki_secret_backend_role" "hah_int_role" {
   allow_subdomains   = true
   allow_glob_domains = true
   allow_ip_sans      = true
+}
+
+# H@H distribution points
+resource "vault_pki_secret_backend_config_urls" "hah_int_urls" {
+  backend = vault_mount.hah_pki.path
+  issuing_certificates = [
+    "${var.vault_addr}/v1/${vault_mount.hah_pki_int.path}/ca"
+  ]
+  crl_distribution_points = [
+    "${var.vault_addr}/v1/${vault_mount.hah_pki_int.path}/crl"
+  ]
 }

@@ -62,14 +62,13 @@ resource "vault_approle_auth_backend_role" "consul" {
   bind_secret_id        = false
 }
 
-# # Add secret ID for the catch-all role
-# resource "vault_approle_auth_backend_role_secret_id" "catch_all_id" {
-#   backend      = vault_auth_backend.auto_auth_approle.path
-#   role_name    = vault_approle_auth_backend_role.catch_all.role_name
-#   wrapping_ttl = "120s"
-#   metadata     = <<EOT
-# {
-#   "hello": "world"
-# }
-# EOT
-# }
+# Role for nomad servers to authenticate and issue themselves certs
+resource "vault_approle_auth_backend_role" "nomad_server" {
+  backend               = vault_auth_backend.auto_auth_approle.path
+  role_name             = "nomad-servers"
+  secret_id_bound_cidrs = ["192.168.1.1/24"]
+  token_policies        = [vault_policy.nomad_read.name, vault_policy.nomad_tls.name]
+  token_num_uses        = 0
+  bind_secret_id        = false
+
+}
