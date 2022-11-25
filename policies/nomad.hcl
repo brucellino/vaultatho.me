@@ -40,3 +40,14 @@ path "sys/capabilities-self" {
 path "auth/token/renew-self" {
   capabilities = ["update"]
 }
+
+path "hashiatho.me-v2" {
+  capabilities = ["read", "list"]
+}
+
+path "hashiatho.me-v2/" {
+  capabilities = ["read", "list"]
+}
+path "hashiatho.me-v2/*" {
+  capabilities = ["read", "list"]
+}

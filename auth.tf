@@ -45,8 +45,8 @@ resource "vault_approle_auth_backend_role" "catch_all" {
   bind_secret_id        = false
 
   # token arguments
-  token_policies = ["default"]
-  token_num_uses = 5
+  token_policies = ["default", "nomad-read", "nomad-monitoring"]
+  token_num_uses = 0
   token_ttl      = 3600
   token_max_ttl  = 10800
   token_type     = "service"
