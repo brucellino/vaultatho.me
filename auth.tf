@@ -40,13 +40,13 @@ resource "vault_approle_auth_backend_role" "catch_all" {
   backend   = vault_auth_backend.auto_auth_approle.path
   role_name = "catch-all"
 
-  secret_id_bound_cidrs = ["192.168.1.1/24"]
+  secret_id_bound_cidrs = ["192.168.1.1/24", "0.0.0.0/0"]
   secret_id_ttl         = 600
   bind_secret_id        = false
 
   # token arguments
-  token_policies = ["default"]
-  token_num_uses = 5
+  token_policies = ["default", "nomad-read", "nomad-monitoring"]
+  token_num_uses = 0
   token_ttl      = 3600
   token_max_ttl  = 10800
   token_type     = "service"

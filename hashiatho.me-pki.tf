@@ -1,14 +1,13 @@
 # CA for Hashi at home
 resource "vault_mount" "hah_pki" {
-  path        = "pki_hah"
-  description = "CA for Hashi at home services"
-  type        = "pki"
-
+  path                      = "pki_hah"
+  description               = "CA H@H services"
+  type                      = "pki"
   default_lease_ttl_seconds = "604800"
   max_lease_ttl_seconds     = "315360000"
 }
 
-# Root certificate for H@H
+# # Root certificate for H@H
 resource "vault_pki_secret_backend_root_cert" "root_cert" {
   backend              = vault_mount.hah_pki.path
   type                 = "internal"
@@ -19,10 +18,10 @@ resource "vault_pki_secret_backend_root_cert" "root_cert" {
   key_type             = "rsa"
   key_bits             = "4096"
   exclude_cn_from_sans = true
-  ou                   = "Vault@Home"
-  organization         = "H@H"
-  country              = "IT"
-  locality             = "Catania"
+  # ou                   = "Vault@Home"
+  # organization         = "H@H"
+  # country              = "IT"
+  # locality             = "Catania"
 }
 
 # H@H distribution points
@@ -62,7 +61,7 @@ resource "vault_pki_secret_backend_intermediate_cert_request" "hah_pki_int" {
   organization         = "H@H"
   country              = "IT"
   locality             = "Catania"
-  ip_sans              = ["192.168.1.14"]
+  # ip_sans              = ["192.168.1.14"]
 }
 
 # signed cert.
@@ -94,6 +93,8 @@ resource "vault_pki_secret_backend_role" "hah_int_role" {
     "*.node.consul",
     "*.node.dc1.consul",
     "*.hashiatho.me",
+    "*.orca-ordinal.ts.net",
+    "*.brucellino.github.beta.tailscale.net",
     "*.station"
   ]
 
