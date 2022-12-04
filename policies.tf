@@ -18,3 +18,8 @@ resource "vault_policy" "consul" {
   name   = "consul"
   policy = file("${path.module}/policies/consul.hcl")
 }
+
+resource "vault_policy" "nomad" {
+  name   = "nomad"
+  policy = file("${path.module}/policies/nomad.hcl")
+}
