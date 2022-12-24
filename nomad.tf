@@ -156,3 +156,38 @@ resource "vault_policy" "nomad_tls" {
   }
   EOT
 }
+
+resource "vault_token_auth_backend_role" "nomad" {
+  role_name = "nomad"
+  allowed_policies = [
+    vault_policy.nomad_tls.name,
+    vault_policy.nomad.name
+  ]
+  disallowed_policies    = ["default"]
+  allowed_entity_aliases = ["nomad-agent"]
+  orphan                 = true
+  token_period           = "86400"
+  renewable              = true
+  # token_explicit_max_ttl = "115200"
+  path_suffix = "server"
+}
+
+
+# resource "vault_token" "nomad" {
+#   role_name = vault_token_auth_backend_role.nomad.role_name
+
+#   policies = [
+#     vault_policy.nomad_tls.name,
+#     vault_policy.nomad.name
+#   ]
+
+#   renewable = true
+#   ttl       = "24h"
+
+#   renew_min_lease = 43200
+#   renew_increment = 86400
+
+#   metadata = {
+#     "purpose" = "service-account"
+#   }
+# }
