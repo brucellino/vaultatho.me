@@ -1,0 +1,38 @@
+# Policy for nodes in the hashi at home datacentre
+
+# Read secret-id from hashiathom.me AppRole
+path "auth/hashiatho.me/role/consul-secrets/secret-id" {
+  capabilities = ["create", "read", "update"]
+}
+
+# Allow login with Approle
+path "auth/${approle_path}/login" {
+  capabilities = ["create", "delete", "read", "update"]
+}
+
+# Allow token lookup
+path "auth/token/lookup-self" {
+  capabilities = ["read"]
+}
+
+# Allow wrapping token lookup
+path "wrapping/lookup" {
+  capabilities = ["read", "list"]
+}
+
+# Read secrets under hashiatho.me KV mount
+path "secret/data/hashiatho.me/*" {
+  capabilities = ["read", "list"]
+}
+
+# List enabled secrets engines
+path "sys/mounts" {
+  capabilities = ["read", "list"]
+}
+
+# Work with PKI secrets engine to issue certs
+# This should be protected with a path filter to only issue certs to
+# the requestor
+path "${ca}/roles/${role}" {
+  capabilities = ["create", "read", "update", "delete", "list", "sudo"]
+}

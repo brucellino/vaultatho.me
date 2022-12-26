@@ -40,7 +40,7 @@ resource "vault_approle_auth_backend_role" "catch_all" {
   backend   = vault_auth_backend.auto_auth_approle.path
   role_name = "catch-all"
 
-  secret_id_bound_cidrs = ["192.168.1.1/24", "0.0.0.0/0"]
+  secret_id_bound_cidrs = ["0.0.0.0/0"]
   secret_id_ttl         = 600
   bind_secret_id        = false
 
@@ -56,7 +56,7 @@ resource "vault_approle_auth_backend_role" "catch_all" {
 resource "vault_approle_auth_backend_role" "consul" {
   backend               = vault_auth_backend.auto_auth_approle.path
   role_name             = "consul-secrets"
-  secret_id_bound_cidrs = ["192.168.1.1/24"]
+  secret_id_bound_cidrs = ["0.0.0.0/0"]
   token_policies        = ["consul"]
   token_num_uses        = 0
   bind_secret_id        = false

@@ -15,8 +15,12 @@ resource "vault_policy" "aws" {
 }
 
 resource "vault_policy" "consul" {
-  name   = "consul"
-  policy = file("${path.module}/policies/consul.hcl")
+  name = "consul"
+  policy = templatefile("${path.module}/policies/consul.hcl.tmpl", {
+    approle_path = vault_auth_backend.auto_auth_approle.path,
+    ca           = vault_mount.hah_pki_int.path
+    role         = vault_pki_secret_backend_role.hah_int_role.name
+  })
 }
 
 resource "vault_policy" "nomad" {
