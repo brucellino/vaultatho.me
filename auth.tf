@@ -27,12 +27,16 @@ resource "vault_auth_backend" "gh_approle" {
 data "github_ip_ranges" "actions" {}
 
 # Role for  github actions runners. They should read only
-resource "vault_approle_auth_backend_role" "aws" {
+resource "vault_approle_auth_backend_role" "gh_runners" {
   backend               = vault_auth_backend.gh_approle.path
   role_name             = "aws"
   secret_id_bound_cidrs = data.github_ip_ranges.actions.actions_ipv4
   token_policies        = [vault_policy.aws.name]
+}
 
+moved {
+  from = vault_approle_auth_backend_role.aws
+  to   = vault_approle_auth_backend_role.gh_runners
 }
 
 # Catch-all role for approle auth bound to access point CIDR
@@ -40,7 +44,7 @@ resource "vault_approle_auth_backend_role" "catch_all" {
   backend   = vault_auth_backend.auto_auth_approle.path
   role_name = "catch-all"
 
-  secret_id_bound_cidrs = ["192.168.1.1/24", "0.0.0.0/0"]
+  secret_id_bound_cidrs = ["0.0.0.0/0"]
   secret_id_ttl         = 600
   bind_secret_id        = false
 
@@ -56,7 +60,7 @@ resource "vault_approle_auth_backend_role" "catch_all" {
 resource "vault_approle_auth_backend_role" "consul" {
   backend               = vault_auth_backend.auto_auth_approle.path
   role_name             = "consul-secrets"
-  secret_id_bound_cidrs = ["192.168.1.1/24"]
+  secret_id_bound_cidrs = ["0.0.0.0/0"]
   token_policies        = ["consul"]
   token_num_uses        = 0
   bind_secret_id        = false

@@ -4,8 +4,9 @@
 path "auth/hashiatho.me/role/consul-secrets/secret-id" {
   capabilities = ["create", "read", "update"]
 }
+
 # Allow login with Approle
-path "auth/hashiatho.me/login" {
+path "auth/${approle_path}/login" {
   capabilities = ["create", "delete", "read", "update"]
 }
 
@@ -19,7 +20,7 @@ path "wrapping/lookup" {
   capabilities = ["read", "list"]
 }
 
-# Write test data
+# Read secrets under hashiatho.me KV mount
 path "secret/data/hashiatho.me/*" {
   capabilities = ["read", "list"]
 }
@@ -32,13 +33,8 @@ path "sys/mounts" {
 # Work with PKI secrets engine to issue certs
 # This should be protected with a path filter to only issue certs to
 # the requestor
-path "PKI/hashiatho.me" {
+path "${ca}/roles/${role}" {
   capabilities = ["create", "read", "update", "delete", "list", "sudo"]
-}
-
-# Read all secrets at hashiatho.me mount
-path "hashiatho.me/*" {
-  capabilities = ["read", "list"]
 }
 
 # Read secrets under hashiatho.me KV mount
@@ -47,5 +43,16 @@ path "secret/hashiatho.me-v2" {
 }
 
 path "secret/hashiatho.me-v2/consul" {
+  capabilities = ["read", "list"]
+}
+
+path "pki_hah_int/issue/hah_int_role" {
+  capabilities = ["create", "read", "update", "delete", "list", "sudo"]
+}
+
+path "hashiatho.me-v2/" {
+  capabilities = ["read", "list"]
+}
+path "hashiatho.me-v2/*" {
   capabilities = ["read", "list"]
 }
