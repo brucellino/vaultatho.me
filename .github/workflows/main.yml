@@ -37,13 +37,13 @@ jobs:
       fail-fast: false
       matrix:
         vault_version:
-          - 1.10.3
-          - 1.10.2
-          - 1.10.1
-        consul_version:
-          - 1.12.0
-          - 1.11.5
+          - 1.12.3
+          - 1.11.7
           - 1.10.10
+        consul_version:
+          - 1.15.0
+          - 1.14.4
+          - 1.13.6
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -82,7 +82,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: 'lts/*'
+          node-version: 'lts/18'
       - name: Install dependencies
         run: |
           npm install -g \

@@ -177,3 +177,18 @@ resource "vault_policy" "nomad_tls" {
   }
   EOT
 }
+
+resource "vault_token_auth_backend_role" "nomad_cluster" {
+  role_name = "nomad-cluster"
+  allowed_policies = [
+    vault_policy.nomad_tls.name,
+    vault_policy.nomad_cluster.name
+  ]
+  disallowed_policies    = ["default"]
+  allowed_entity_aliases = ["nomad-agent"]
+  orphan                 = true
+  token_period           = "86400"
+  renewable              = true
+  # token_explicit_max_ttl = "115200"
+  path_suffix = "server"
+}
