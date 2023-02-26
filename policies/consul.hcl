@@ -40,3 +40,12 @@ path "PKI/hashiatho.me" {
 path "hashiatho.me/*" {
   capabilities = ["read", "list"]
 }
+
+# Read secrets under hashiatho.me KV mount
+path "secret/hashiatho.me-v2" {
+  capabilities = ["read", "list"]
+}
+
+path "secret/hashiatho.me-v2/consul" {
+  capabilities = ["read", "list"]
+}

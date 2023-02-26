@@ -10,3 +10,10 @@ variable "consul_http_addr" {
   sensitive   = false
   default     = "http://bare:8500"
 }
+
+variable "nomad_server_token_role" {
+  type        = string
+  description = "Name of the role to be applied to tokens issued to Nomad servers"
+  sensitive   = false
+  default     = "nomad-cluster"
+}

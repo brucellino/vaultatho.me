@@ -1,16 +1,17 @@
-# Allow creating tokens under "nomad-cluster" token role. The token role name
-# should be updated if "nomad-cluster" is not used.
+# The policy for Nomad-Vault integration.
+# This policy allows Nomad jobs to request Vault tokens
+
+# Allow creating tokens under "nomad-cluster" token role.
 path "auth/token/create/nomad-cluster" {
   capabilities = ["update"]
 }
 
-# Allow looking up "nomad-cluster" token role. The token role name should be
-# updated if "nomad-cluster" is not used.
+# Allow looking up "nomad-cluster" token role.
 path "auth/token/roles/nomad-cluster" {
   capabilities = ["read"]
 }
 
-# Allow looking up the token passed to Nomad to validate # the token has the
+# Allow looking up the token passed to Nomad to validate the token has the
 # proper capabilities. This is provided by the "default" policy.
 path "auth/token/lookup-self" {
   capabilities = ["read"]
@@ -21,6 +22,13 @@ path "auth/token/lookup-self" {
 # `allow_unauthenticated` is set to false.
 path "auth/token/lookup" {
   capabilities = ["update"]
+}
+
+path "auth/token/create/nomad-cluster" {
+  capabilities = ["update"]
+}
+path "auth/token/roles/nomad-cluster" {
+  capabilities = ["read"]
 }
 
 # Allow revoking tokens that should no longer exist. This allows revoking
@@ -41,6 +49,7 @@ path "auth/token/renew-self" {
   capabilities = ["update"]
 }
 
+# Paths which jobs will request secrets at.
 path "hashiatho.me-v2" {
   capabilities = ["read", "list"]
 }
@@ -49,5 +58,9 @@ path "hashiatho.me-v2/" {
   capabilities = ["read", "list"]
 }
 path "hashiatho.me-v2/*" {
+  capabilities = ["read", "list"]
+}
+
+path "hashiatho.me-v2/data/*" {
   capabilities = ["read", "list"]
 }

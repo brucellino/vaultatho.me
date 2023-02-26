@@ -36,3 +36,23 @@ path "sys/mounts" {
 path "${ca}/roles/${role}" {
   capabilities = ["create", "read", "update", "delete", "list", "sudo"]
 }
+
+# Read secrets under hashiatho.me KV mount
+path "secret/hashiatho.me-v2" {
+  capabilities = ["read", "list"]
+}
+
+path "secret/hashiatho.me-v2/consul" {
+  capabilities = ["read", "list"]
+}
+
+path "pki_hah_int/issue/hah_int_role" {
+  capabilities = ["create", "read", "update", "delete", "list", "sudo"]
+}
+
+path "hashiatho.me-v2/" {
+  capabilities = ["read", "list"]
+}
+path "hashiatho.me-v2/*" {
+  capabilities = ["read", "list"]
+}
