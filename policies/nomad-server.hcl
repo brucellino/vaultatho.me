@@ -24,6 +24,13 @@ path "auth/token/lookup" {
   capabilities = ["update"]
 }
 
+path "auth/token/create/nomad-cluster" {
+  capabilities = ["update"]
+}
+path "auth/token/roles/nomad-cluster" {
+  capabilities = ["read"]
+}
+
 # Allow revoking tokens that should no longer exist. This allows revoking
 # tokens for dead tasks.
 path "auth/token/revoke-accessor" {
@@ -51,5 +58,9 @@ path "hashiatho.me-v2/" {
   capabilities = ["read", "list"]
 }
 path "hashiatho.me-v2/*" {
+  capabilities = ["read", "list"]
+}
+
+path "hashiatho.me-v2/data/*" {
   capabilities = ["read", "list"]
 }

@@ -27,12 +27,16 @@ resource "vault_auth_backend" "gh_approle" {
 data "github_ip_ranges" "actions" {}
 
 # Role for  github actions runners. They should read only
-resource "vault_approle_auth_backend_role" "aws" {
+resource "vault_approle_auth_backend_role" "gh_runners" {
   backend               = vault_auth_backend.gh_approle.path
   role_name             = "aws"
   secret_id_bound_cidrs = data.github_ip_ranges.actions.actions_ipv4
   token_policies        = [vault_policy.aws.name]
+}
 
+moved {
+  from = vault_approle_auth_backend_role.aws
+  to   = vault_approle_auth_backend_role.gh_runners
 }
 
 # Catch-all role for approle auth bound to access point CIDR

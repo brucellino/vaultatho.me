@@ -30,7 +30,28 @@ resource "vault_policy" "nomad_read" {
   path "${vault_mount.hashiathome-kv-v2.path}/*" {
     capabilities = ["read", "list"]
   }
+  path "hashiatho.me-v2/data/*" {
+    capabilities = ["read", "list"]
+  }
+  path "auth/token/roles/nomad-cluster" {
+    capabilities = ["read"]
+  }
+  path "auth/token/revoke-accessor" {
+    capabilities = ["update"]
+  }
+
+  path "auth/token/roles/nomad-cluster" {
+    capabilities = ["read"]
+  }
+  path "auth/token/create/nomad-cluster" {
+    capabilities = ["update"]
+  }
   EOT
+}
+
+resource "vault_policy" "nomad_cluster" {
+  name   = "nomad-cluster"
+  policy = file("${path.module}/policies/nomad-server.hcl")
 }
 
 # Vault mTLS
@@ -157,11 +178,11 @@ resource "vault_policy" "nomad_tls" {
   EOT
 }
 
-resource "vault_token_auth_backend_role" "nomad" {
-  role_name = "nomad"
+resource "vault_token_auth_backend_role" "nomad_cluster" {
+  role_name = "nomad-cluster"
   allowed_policies = [
     vault_policy.nomad_tls.name,
-    vault_policy.nomad.name
+    vault_policy.nomad_cluster.name
   ]
   disallowed_policies    = ["default"]
   allowed_entity_aliases = ["nomad-agent"]

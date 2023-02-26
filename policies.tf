@@ -22,8 +22,3 @@ resource "vault_policy" "consul" {
     role         = vault_pki_secret_backend_role.hah_int_role.name
   })
 }
-
-resource "vault_policy" "nomad" {
-  name   = "nomad"
-  policy = file("${path.module}/policies/nomad.hcl")
-}
