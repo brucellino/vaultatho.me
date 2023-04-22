@@ -106,11 +106,21 @@ resource "vault_pki_secret_backend_role" "hah_int_role" {
 
 # H@H distribution points
 resource "vault_pki_secret_backend_config_urls" "hah_int_urls" {
-  backend = vault_mount.hah_pki.path
+  backend = vault_mount.hah_pki_int.path
   issuing_certificates = [
     "${var.vault_addr}/v1/${vault_mount.hah_pki_int.path}/ca"
   ]
   crl_distribution_points = [
     "${var.vault_addr}/v1/${vault_mount.hah_pki_int.path}/crl"
   ]
+
+}
+
+resource "vault_pki_secret_backend_crl_config" "hah_int_config" {
+  backend                       = vault_mount.hah_pki_int.path
+  expiry                        = "730h"
+  auto_rebuild                  = true
+  enable_delta                  = true
+  unified_crl                   = true
+  unified_crl_on_existing_paths = true
 }
