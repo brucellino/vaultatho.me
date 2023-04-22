@@ -10,7 +10,6 @@ permissions:
   actions: read
   contents: write
   deployments: none
-  id-token: read
   packages: write
   pages: none
   pull-requests: write
