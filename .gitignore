@@ -30,3 +30,6 @@ override.tf.json
 
 # ignore snapshots
 *.snap
+
+# Ignore infracost
+.infracost
