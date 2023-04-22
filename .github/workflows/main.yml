@@ -51,9 +51,9 @@ jobs:
       fail-fast: false
       matrix:
         vault_version:
+          - 1.13.1
           - 1.12.3
           - 1.11.7
-          - 1.10.10
         consul_version:
           - 1.15.0
           - 1.14.4
