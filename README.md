@@ -1,6 +1,6 @@
 # vaultatho.me
 
-[![pre-commit.ci status](https://results.pre-commit.ci/badge/github/brucellino/vaultatho.me/main.svg)](https://results.pre-commit.ci/latest/github/brucellino/vaultatho.me/main)
+[![pre-commit.ci status](https://results.pre-commit.ci/badge/github/brucellino/vaultatho.me/main.svg)](https://results.pre-commit.ci/latest/github/brucellino/vaultatho.me/main)[![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-%23FE5196?logo=conventionalcommits&logoColor=white)](https://conventionalcommits.org)[![Release](https://github.com/brucellino/vaultatho.me/actions/workflows/main.yml/badge.svg)](https://github.com/brucellino/vaultatho.me/actions/workflows/main.yml)
 
 
 Terraform for Vault component of [Hashi@home](https://hashiatho.me)
