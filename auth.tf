@@ -66,9 +66,13 @@ resource "vault_approle_auth_backend_role" "consul" {
 }
 
 resource "vault_github_auth_backend" "hah" {
-  path         = "github"
-  organization = var.github_organization
-
+  path                    = "github"
+  organization            = var.github_organization
+  disable_remount         = false
+  token_no_default_policy = true
+  token_num_uses          = 1
+  token_period            = 3600
+  token_type              = "service"
 }
 
 # Role for nomad servers to authenticate and issue themselves certs
