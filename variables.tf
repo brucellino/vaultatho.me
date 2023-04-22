@@ -17,3 +17,10 @@ variable "nomad_server_token_role" {
   sensitive   = false
   default     = "nomad-cluster"
 }
+
+variable "github_organization" {
+  type        = string
+  description = "Name of the github organisation used to authenticate users with the github auth method"
+  default     = "hashi-at-home"
+  sensitive   = false
+}

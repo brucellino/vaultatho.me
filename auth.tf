@@ -54,7 +54,6 @@ resource "vault_approle_auth_backend_role" "catch_all" {
   token_ttl      = 3600
   token_max_ttl  = 10800
   token_type     = "service"
-
 }
 
 resource "vault_approle_auth_backend_role" "consul" {
@@ -64,6 +63,16 @@ resource "vault_approle_auth_backend_role" "consul" {
   token_policies        = ["consul"]
   token_num_uses        = 0
   bind_secret_id        = false
+}
+
+resource "vault_github_auth_backend" "hah" {
+  path                    = "github"
+  organization            = var.github_organization
+  disable_remount         = false
+  token_no_default_policy = true
+  token_num_uses          = 1
+  token_period            = 3600
+  token_type              = "service"
 }
 
 # Role for nomad servers to authenticate and issue themselves certs
