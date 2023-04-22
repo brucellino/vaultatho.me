@@ -82,7 +82,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: 'lts/18'
+          node-version: '19'
       - name: Install dependencies
         run: |
           npm install -g \
