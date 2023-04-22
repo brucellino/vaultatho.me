@@ -117,10 +117,8 @@ resource "vault_pki_secret_backend_config_urls" "hah_int_urls" {
 }
 
 resource "vault_pki_secret_backend_crl_config" "hah_int_config" {
-  backend                       = vault_mount.hah_pki_int.path
-  expiry                        = "730h"
-  auto_rebuild                  = true
-  enable_delta                  = true
-  unified_crl                   = true
-  unified_crl_on_existing_paths = true
+  backend      = vault_mount.hah_pki_int.path
+  expiry       = "730h"
+  auto_rebuild = true
+  enable_delta = true
 }
