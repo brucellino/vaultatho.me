@@ -3,6 +3,19 @@ on:
   push:
     branches:
       - main
+  pull_request:
+    branches:
+      - main
+permissions:
+  actions: read
+  contents: write
+  deployments: none
+  packages: write
+  pages: none
+  pull-requests: write
+  security-events: write
+  statuses: write
+
 jobs:
   vpn:
     name: setup Tailscale
@@ -21,7 +34,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
       - name: init terraform
@@ -37,16 +50,16 @@ jobs:
       fail-fast: false
       matrix:
         vault_version:
+          - 1.13.1
           - 1.12.3
           - 1.11.7
-          - 1.10.10
         consul_version:
           - 1.15.0
           - 1.14.4
           - 1.13.6
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
       - name: Get curl and zip
@@ -76,13 +89,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
       - name: Setup Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: 'lts/18'
+          node-version: 'lts/hydrogen'
       - name: Install dependencies
         run: |
           npm install -g \
