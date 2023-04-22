@@ -3,6 +3,17 @@ on:
   push:
     branches:
       - main
+permissions:
+  actions: read
+  contents: write
+  deployments: none
+  id-token: read
+  packages: write
+  pages: none
+  pull-requests: write
+  security-events: write
+  statuses: write
+
 jobs:
   vpn:
     name: setup Tailscale
@@ -82,7 +93,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '19'
+          node-version: 'lts/hydrogen'
       - name: Install dependencies
         run: |
           npm install -g \
