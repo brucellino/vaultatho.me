@@ -7,12 +7,12 @@ resource "vault_nomad_secret_backend" "catch_all" {
   max_lease_ttl_seconds     = "86400"
 }
 
-# Create vault role for the nomad backend to issue tokens for nomad jobs
+# # Create vault role for the nomad backend to issue tokens for nomad jobs
 resource "vault_nomad_secret_role" "catch_all" {
   backend  = vault_nomad_secret_backend.catch_all.backend
   role     = "nomad_catch_all"
   type     = "client"
-  policies = ["nomad-monitoring", "nomad-read", "nomad-tls"]
+  policies = ["nomad-monitoring", "nomad-read", "nomad-tls", "consul"]
 }
 
 
@@ -23,35 +23,19 @@ resource "vault_policy" "nomad_monitoring" {
 }
 
 # Vault policy for nomad to read kv data for deployments
-resource "vault_policy" "nomad_read" {
-  name   = "nomad-read"
-  policy = <<EOT
-  # Nomad agents can read all secrets in hashiatho.me-v2 mount
-  path "${vault_mount.hashiathome-kv-v2.path}/*" {
-    capabilities = ["read", "list"]
-  }
-  path "hashiatho.me-v2/data/*" {
-    capabilities = ["read", "list"]
-  }
-  path "auth/token/roles/nomad-cluster" {
-    capabilities = ["read"]
-  }
-  path "auth/token/revoke-accessor" {
-    capabilities = ["update"]
-  }
-
-  path "auth/token/roles/nomad-cluster" {
-    capabilities = ["read"]
-  }
-  path "auth/token/create/nomad-cluster" {
-    capabilities = ["update"]
-  }
-  EOT
+resource "vault_policy" "nomad_server" {
+  name   = "nomad-server"
+  policy = templatefile("${path.module}/policies/nomad-server.hcl.tmpl", { pki_mount = vault_mount.pki_hah_nomad_int.path })
 }
 
-resource "vault_policy" "nomad_cluster" {
-  name   = "nomad-cluster"
-  policy = file("${path.module}/policies/nomad-server.hcl")
+resource "vault_policy" "nomad_read" {
+  name   = "nomad-read"
+  policy = templatefile("${path.module}/policies/nomad-read.hcl.tmpl", { pki_mount = vault_mount.pki_hah_nomad_int.path })
+}
+
+resource "vault_policy" "nomad_tls" {
+  name   = "nomad-tls"
+  policy = templatefile("${path.module}/policies/nomad-tls.hcl.tmpl", { pki_mount = vault_mount.pki_hah_nomad_int.path })
 }
 
 # Vault mTLS
@@ -167,28 +151,12 @@ resource "vault_pki_secret_backend_config_urls" "nomad_int_urls" {
   ]
 }
 
-# Vault policy for nomad agents to issue themselves TLS certificates
-resource "vault_policy" "nomad_tls" {
-  name   = "nomad-tls"
-  policy = <<EOT
-  # Nomad agents agents can request TLS certificates from the intermediate CA
-  path "${vault_mount.pki_hah_nomad_int.path}/issue/nomad_hah_int_role" {
-    capabilities = ["update"]
-  }
-  EOT
-}
-
 resource "vault_token_auth_backend_role" "nomad_cluster" {
-  role_name = "nomad-cluster"
-  allowed_policies = [
-    vault_policy.nomad_tls.name,
-    vault_policy.nomad_cluster.name
-  ]
-  disallowed_policies    = ["default"]
-  allowed_entity_aliases = ["nomad-agent"]
-  orphan                 = true
-  token_period           = "86400"
-  renewable              = true
+  role_name           = "nomad-cluster"
+  disallowed_policies = ["nomad-server"]
+  orphan              = true
+  token_period        = "86400"
+  renewable           = true
   # token_explicit_max_ttl = "115200"
   path_suffix = "server"
 }

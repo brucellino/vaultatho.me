@@ -49,7 +49,7 @@ resource "vault_approle_auth_backend_role" "catch_all" {
   bind_secret_id        = false
 
   # token arguments
-  token_policies = ["default", "nomad-read", "nomad-monitoring"]
+  token_policies = ["default", "nomad-read", "nomad-monitoring", "consul"]
   token_num_uses = 0
   token_ttl      = 3600
   token_max_ttl  = 10800
@@ -76,12 +76,11 @@ resource "vault_github_auth_backend" "hah" {
 }
 
 # Role for nomad servers to authenticate and issue themselves certs
-# resource "vault_approle_auth_backend_role" "nomad_server" {
-#   backend               = vault_auth_backend.auto_auth_approle.path
-#   role_name             = "nomad-servers"
-#   secret_id_bound_cidrs = ["192.168.1.1/24"]
-#   token_policies        = [vault_policy.nomad_read.name, vault_policy.nomad_tls.name]
-#   token_num_uses        = 0
-#   bind_secret_id        = false
-
-# }
+resource "vault_approle_auth_backend_role" "nomad_server" {
+  backend               = vault_auth_backend.auto_auth_approle.path
+  role_name             = "nomad-servers"
+  secret_id_bound_cidrs = ["192.168.1.1/24"]
+  token_policies        = [vault_policy.nomad_read.name, vault_policy.nomad_tls.name]
+  token_num_uses        = 0
+  bind_secret_id        = false
+}
