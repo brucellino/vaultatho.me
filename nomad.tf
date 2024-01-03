@@ -160,3 +160,37 @@ resource "vault_token_auth_backend_role" "nomad_cluster" {
   # token_explicit_max_ttl = "115200"
   path_suffix = "server"
 }
+
+
+resource "vault_jwt_auth_backend" "nomad" {
+  description        = "Vault JW Auth"
+  path               = "jwt-nomad"
+  type               = "jwt"
+  jwks_url           = "http://bare:4646/.well-known/jwks.json"
+  jwt_supported_algs = ["RS256", "EdDSA"]
+  # default_role       = vault_jwt_auth_backend_role.nomad_jobs.role_name
+  default_role = "nomad-workloads"
+}
+
+
+resource "vault_jwt_auth_backend_role" "nomad_jobs" {
+  backend                 = vault_jwt_auth_backend.nomad.path
+  role_name               = "nomad-workloads"
+  role_type               = "jwt"
+  bound_audiences         = ["vault.io"]
+  user_claim              = "/nomad_job_id"
+  user_claim_json_pointer = true
+  claim_mappings = {
+    "nomad_job_id" = "nomad_job_id"
+    "nomad_task"   = "nomad_task"
+  }
+  token_type             = "service"
+  token_policies         = [vault_policy.nomad_workloads.name]
+  token_period           = 3600
+  token_explicit_max_ttl = 0
+}
+
+resource "vault_policy" "nomad_workloads" {
+  name   = "nomad-workloads"
+  policy = file("${path.module}/policies/nomad-workloads.hcl")
+}
