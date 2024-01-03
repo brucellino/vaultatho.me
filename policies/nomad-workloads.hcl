@@ -13,3 +13,19 @@ path "kv/metadata/{{identity.entity.aliases.auth_jwt_b998f16c.metadata.nomad_nam
 path "kv/metadata/*" {
   capabilities = ["list"]
 }
+
+# Paths which jobs will request secrets at.
+path "hashiatho.me-v2" {
+  capabilities = ["read", "list"]
+}
+
+path "hashiatho.me-v2/" {
+  capabilities = ["read", "list"]
+}
+path "hashiatho.me-v2/*" {
+  capabilities = ["read", "list"]
+}
+
+path "github_personal_tokens/token" {
+  capabilities = ["create", "read", "update", "delete", "list"]
+}
