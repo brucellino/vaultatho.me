@@ -50,13 +50,21 @@ jobs:
       fail-fast: false
       matrix:
         vault_version:
+          - 1.17.0
+          - 1.16.3
+          - 1.15.6
+          - 1.14.10
           - 1.13.1
           - 1.12.3
           - 1.11.7
         consul_version:
-          - 1.15.0
-          - 1.14.4
-          - 1.13.6
+          - 1.19.0
+          - 1.18.2
+          - 1.17.3
+          - 1.16.6
+          - 1.15.10
+          - 1.14.11
+          - 1.13.9
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -80,6 +88,7 @@ jobs:
         run: |
           VAULT_TOKEN=$(cat ~/.vault-token) \
           TF_VAR_vault_addr=http://localhost:8200 \
+          TF_VAR_consul_token=${{ secrets.CONSUL_TOKEN }} \
           terraform plan
       # - name: stop Vault
       #   run: kill -9 $(jobs -p)
