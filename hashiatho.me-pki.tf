@@ -89,13 +89,11 @@ resource "vault_pki_secret_backend_role" "hah_int_role" {
     "KeyAgreement"
   ]
   allowed_domains = [
+    "*.orca-ordinal.ts.net",
     "*.service.consul",
     "*.node.consul",
     "*.node.dc1.consul",
-    "*.hashiatho.me",
-    "*.orca-ordinal.ts.net",
-    "*.brucellino.github.beta.tailscale.net",
-    "*.station"
+    "*.hashiatho.me"
   ]
 
   allow_bare_domains = true
