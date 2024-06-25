@@ -78,7 +78,10 @@ jobs:
           unzip consul_${{ matrix.consul_version }}_linux_amd64.zip
           mv consul ~/consul
       - name: Get Vault
-        run: curl -L https://releases.hashicorp.com/vault/${{ matrix.vault_version }}/vault_${{ matrix.vault_version }}_linux_amd64.zip | gunzip -> ~/vault
+        run: |
+          wget https://releases.hashicorp.com/vault/${{ matrix.vault_version }}/vault_${{ matrix.vault_version }}_linux_amd64.zip
+          unzip -o vault_${{ matrix.vault_version }}_linux_amd64.zip
+          mv vault ~/vault
       - name: Make vault and consul executable
         run: chmod +x ~/vault ~/consul
       - name: Start Consul dev server
