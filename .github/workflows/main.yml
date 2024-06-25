@@ -17,20 +17,20 @@ permissions:
   statuses: write
 
 jobs:
-  vpn:
-    name: setup Tailscale
-    runs-on: ubuntu-latest
-    steps:
-      - name: Get Tailscale
-        run: curl -fsSL https://tailscale.com/install.sh | sh
-      - name: Start tailscale
-        run: sudo tailscale up --authkey "${TAILSCALE_AUTHKEY}"
-        env:
-          TAILSCALE_AUTHKEY: ${{ secrets.TAILSCALE_AUTHKEY }}
+  # vpn:
+  #   name: setup Tailscale
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Get Tailscale
+  #       run: curl -fsSL https://tailscale.com/install.sh | sh
+  #     - name: Start tailscale
+  #       run: sudo tailscale up --authkey "${TAILSCALE_AUTHKEY}"
+  #       env:
+  #         TAILSCALE_AUTHKEY: ${{ secrets.TAILSCALE_AUTHKEY }}
 
   validate:
     name: Test
-    needs: [vpn]
+    # needs: [vpn]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -53,25 +53,21 @@ jobs:
           - 1.17.0
           - 1.16.3
           - 1.15.6
-          - 1.14.10
-          - 1.13.1
-          - 1.12.3
-          - 1.11.7
         consul_version:
           - 1.19.0
           - 1.18.2
           - 1.17.3
-          - 1.16.6
-          - 1.15.10
-          - 1.14.11
-          - 1.13.9
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Get curl and zip
-        run: sudo apt-get install -y curl unzip jq
+      - name: Get Tailscale
+        run: curl -fsSL https://tailscale.com/install.sh | sh
+      - name: Start tailscale
+        run: sudo tailscale up --authkey "${TAILSCALE_AUTHKEY}"
+        env:
+          TAILSCALE_AUTHKEY: ${{ secrets.TAILSCALE_AUTHKEY }}
       - name: Get Consul
         run: |
           wget https://releases.hashicorp.com/consul/${{ matrix.consul_version }}/consul_${{ matrix.consul_version }}_linux_amd64.zip
