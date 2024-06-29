@@ -38,3 +38,7 @@ path "hashiatho.me-v2/{{identity.entity.aliases.auth_jwt_b998f16c.metadata.nomad
 path "github_personal_tokens/token" {
   capabilities = ["create", "read", "update", "delete", "list"]
 }
+
+path "pki_hah_int/issue/hah_int_role" {
+  capabilities = ["update", "list"]
+}
