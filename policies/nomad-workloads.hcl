@@ -42,3 +42,8 @@ path "github_personal_tokens/token" {
 path "pki_hah_int/issue/hah_int_role" {
   capabilities = ["update", "list"]
 }
+
+# create consul tokens
+path "hashi_at_home/creds/cluster-role" {
+  capabilities = ["read"]
+}
