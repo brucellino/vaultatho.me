@@ -1,21 +1,30 @@
 # Create Nomad secrets mount for all deployments
-# resource "vault_nomad_secret_backend" "catch_all" {
-#   backend                   = "nomad"
-#   description               = "Nomad default secrets"
-#   address                   = "http://nomad.service.consul:4646"
-#   default_lease_ttl_seconds = "3600"
-#   max_lease_ttl_seconds     = "86400"
-# }
+resource "vault_nomad_secret_backend" "catch_all" {
+  backend                   = "nomad"
+  description               = "Nomad default secrets"
+  address                   = "http://nomad.service.consul:4646"
+  default_lease_ttl_seconds = "3600"
+  max_lease_ttl_seconds     = "86400"
+  token                     = var.nomad_mgmt_token
+}
 
 # # Create vault role for the nomad backend to issue tokens for nomad jobs
 resource "vault_nomad_secret_role" "catch_all" {
   # backend  = vault_nomad_secret_backend.catch_all.backend
-  backend  = "nomad"
+  backend  = vault_nomad_secret_backend.catch_all.id
   role     = "nomad_catch_all"
   type     = "client"
   policies = ["nomad-monitoring", "nomad-read", "nomad-tls", "consul"]
 }
 
+# Create vault role for the nomad backend to issue tokens for nomad jobs
+resource "vault_nomad_secret_role" "mgmt" {
+  # backend  = vault_nomad_secret_backend.catch_all.backend
+  backend  = vault_nomad_secret_backend.catch_all.id
+  role     = "mgmt"
+  type     = "management"
+  policies = [""]
+}
 
 # Create Vault policy from nomad monitoring data
 resource "vault_policy" "nomad_monitoring" {

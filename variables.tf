@@ -23,6 +23,12 @@ variable "consul_token" {
   description = "Consul token used to configured consul secret backend"
 }
 
+variable "nomad_mgmt_token" {
+  type        = string
+  sensitive   = true
+  description = "Nomad bootstrap token"
+}
+
 variable "nomad_server_token_role" {
   type        = string
   description = "Name of the role to be applied to tokens issued to Nomad servers"
