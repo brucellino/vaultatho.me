@@ -91,8 +91,8 @@ jobs:
         run: chmod +x ~/vault ~/consul ~/nomad
       - name: Start Consul dev server
         run: ~/consul agent -dev &
-      - name: Bootstrap consul ACL
-        run: ~/consul acl bootstrap -format=json
+      # - name: Bootstrap consul ACL
+      #   run: ~/consul acl bootstrap -format=json
       - name: Start Nomad server
         run: ~/nomad agent -dev -acl-enabled -bootstrap-expect=1 &
       - name: Bootstrap Nomad ACL
