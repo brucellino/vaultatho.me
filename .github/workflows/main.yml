@@ -53,6 +53,10 @@ jobs:
           - 1.17.0
           - 1.16.3
           - 1.15.6
+        nomad_version:
+          - 1.8.1
+          - 1.7.7
+          - 1.6.10
         consul_version:
           - 1.19.0
           - 1.18.2
@@ -71,23 +75,35 @@ jobs:
       - name: Get Consul
         run: |
           wget https://releases.hashicorp.com/consul/${{ matrix.consul_version }}/consul_${{ matrix.consul_version }}_linux_amd64.zip
-          unzip consul_${{ matrix.consul_version }}_linux_amd64.zip
+          unzip -o consul_${{ matrix.consul_version }}_linux_amd64.zip
           mv consul ~/consul
+      - name: Get Nomad
+        run: |
+          wget https://releases.hashicorp.com/nomad/${{ matrix.nomad_version }}/nomad_${{ matrix.nomad_version }}_linux_amd64.zip
+          unzip -o nomad_${{ matrix.nomad_version }}_linux_amd64.zip
+          mv nomad ~/nomad
       - name: Get Vault
         run: |
           wget https://releases.hashicorp.com/vault/${{ matrix.vault_version }}/vault_${{ matrix.vault_version }}_linux_amd64.zip
           unzip -o vault_${{ matrix.vault_version }}_linux_amd64.zip
           mv vault ~/vault
-      - name: Make vault and consul executable
-        run: chmod +x ~/vault ~/consul
+      - name: Make vault, nomad and consul executable
+        run: chmod +x ~/vault ~/consul ~/nomad
       - name: Start Consul dev server
         run: ~/consul agent -dev &
+      # - name: Bootstrap consul ACL
+      #   run: ~/consul acl bootstrap -format=json
+      - name: Start Nomad server
+        run: ~/nomad agent -dev -acl-enabled -bootstrap-expect=1 &
+      - name: Bootstrap Nomad ACL
+        run: ~/nomad acl bootstrap -json > nomad_acl.json
       - name: Start Vault dev server
         run: ~/vault server -dev &
       - name: init terraform
         run: terraform init
       - name: Plan
         run: |
+          TF_VAR_nomad_mgmt_token=$(cat nomad_acl.json| jq -r .SecretID) \
           VAULT_TOKEN=$(cat ~/.vault-token) \
           TF_VAR_vault_addr=http://localhost:8200 \
           TF_VAR_consul_token=${{ secrets.CONSUL_TOKEN }} \
