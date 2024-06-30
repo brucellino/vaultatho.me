@@ -92,11 +92,11 @@ jobs:
       - name: Start Consul dev server
         run: ~/consul agent -dev &
       - name: Bootstrap consul ACL
-        run: consul acl bootstrap -format=json
+        run: ~/consul acl bootstrap -format=json
       - name: Start Nomad server
-        run: nomad agent -dev -acl-enabled -bootstrap-expect=1 &
+        run: ~/nomad agent -dev -acl-enabled -bootstrap-expect=1 &
       - name: Bootstrap Nomad ACL
-        run: nomad acl bootstrap -json
+        run: ~/nomad acl bootstrap -json
       - name: Start Vault dev server
         run: ~/vault server -dev &
       - name: init terraform
