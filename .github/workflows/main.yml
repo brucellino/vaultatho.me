@@ -96,17 +96,17 @@ jobs:
       - name: Start Nomad server
         run: ~/nomad agent -dev -acl-enabled -bootstrap-expect=1 &
       - name: Bootstrap Nomad ACL
-        run: ~/nomad acl bootstrap -json
+        run: ~/nomad acl bootstrap -json > nomad_acl.json
       - name: Start Vault dev server
         run: ~/vault server -dev &
       - name: init terraform
         run: terraform init
       - name: Plan
         run: |
+          TF_VAR_nomad_token=$(cat nomad_acl.json| jq -r .SecretID) \
           VAULT_TOKEN=$(cat ~/.vault-token) \
           TF_VAR_vault_addr=http://localhost:8200 \
           TF_VAR_consul_token=${{ secrets.CONSUL_TOKEN }} \
-          TF_VAR_nomad_token=${{ secrets.NOMAD_TOKEN }} \
           terraform plan
       # - name: stop Vault
       #   run: kill -9 $(jobs -p)
