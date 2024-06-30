@@ -103,7 +103,7 @@ jobs:
         run: terraform init
       - name: Plan
         run: |
-          TF_VAR_nomad_token=$(cat nomad_acl.json| jq -r .SecretID) \
+          TF_VAR_nomad_mgmt_token=$(cat nomad_acl.json| jq -r .SecretID) \
           VAULT_TOKEN=$(cat ~/.vault-token) \
           TF_VAR_vault_addr=http://localhost:8200 \
           TF_VAR_consul_token=${{ secrets.CONSUL_TOKEN }} \
