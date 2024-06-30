@@ -80,7 +80,7 @@ jobs:
       - name: Get Nomad
         run: |
           wget https://releases.hashicorp.com/nomad/${{ matrix.nomad_version }}/nomad_${{ matrix.nomad_version }}_linux_amd64.zip
-          unzip nomad_${{ matrix.nomad.version }}_linux_amd64.zip
+          unzip nomad_${{ matrix.nomad_version }}_linux_amd64.zip
           mv nomad ~/nomad
       - name: Get Vault
         run: |
