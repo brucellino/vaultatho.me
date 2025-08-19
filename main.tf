@@ -8,7 +8,7 @@ terraform {
   required_providers {
     vault = {
       source  = "hashicorp/vault"
-      version = "5.1.0"
+      version = "5.2.1"
     }
     # github = {
     #   source  = "integrations/github"
