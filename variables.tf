@@ -10,6 +10,24 @@ variable "consul_http_addr" {
   sensitive   = false
   default     = "http://bare:8500"
 }
+variable "consul_backend_path" {
+  type        = string
+  description = "Path to mount Consul Backend on"
+  sensitive   = false
+  default     = "hashi_at_home"
+}
+
+variable "consul_token" {
+  type        = string
+  sensitive   = true
+  description = "Consul token used to configured consul secret backend"
+}
+
+variable "nomad_mgmt_token" {
+  type        = string
+  sensitive   = true
+  description = "Nomad bootstrap token"
+}
 
 variable "nomad_server_token_role" {
   type        = string
