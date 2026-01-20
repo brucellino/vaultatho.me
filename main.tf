@@ -1,4 +1,5 @@
 terraform {
+  version = "1.14.3"
   backend "consul" {
     // address = "sense.station:8500"
     scheme     = "http"
