@@ -38,7 +38,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: Create dev env with jdx mise action
-        uses: jdx/mise-action@v2
+        uses: jdx/mise-action@v3
         with:
           install: true
           experimental: true
@@ -67,7 +67,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: Create dev env with jdx mise action
-        uses: jdx/mise-action@v2
+        uses: jdx/mise-action@v3
         with:
           install: true
           experimental: true
