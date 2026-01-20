@@ -10,6 +10,7 @@ Terraform for Vault component of [Hashi@home](https://hashiatho.me)
 
 | Name | Version |
 |------|---------|
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | 1.14.3 |
 | <a name="requirement_vault"></a> [vault](#requirement\_vault) | 5.6.0 |
 
 ## Providers
