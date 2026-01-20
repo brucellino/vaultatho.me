@@ -57,15 +57,10 @@ jobs:
         vault_version:
           - 1.17.0
           - 1.16.3
-          - 1.15.6
         nomad_version:
-          - 1.8.1
-          - 1.7.7
-          - 1.6.10
+          - 1.11.1
         consul_version:
-          - 1.19.0
-          - 1.18.2
-          - 1.17.3
+          - 1.21.1
     steps:
       - name: Checkout
         uses: actions/checkout@v6
