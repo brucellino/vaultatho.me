@@ -37,6 +37,11 @@ jobs:
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
+      - name: Create dev env with jdx mise action
+        uses: jdx/mise-action@v2
+        with:
+          install: true
+          experimental: true
       - name: init terraform
         run: terraform init --backend=false
       - name: validate terraform
