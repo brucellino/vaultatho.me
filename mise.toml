@@ -1,10 +1,14 @@
+[settings]
+auto_install = true
+
 [env]
 _.python.venv = { path = ".venv", create = true }
 
 [tools]
 python = "3.14.2"
-uv = "latest"
+uv = "0.11.13"
 node = "24"
+prek = "0.3.13"
 terraform = "1.14.3"
 [tasks]
 install_deps = "uv pip install pre-commit ansible-core detect-secrets checkov"
