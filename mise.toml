@@ -10,5 +10,6 @@ uv = "0.11.13"
 node = "24"
 prek = "0.3.13"
 terraform = "1.14.3"
+vault = "1.21.4"
 [tasks]
 install_deps = "uv pip install pre-commit ansible-core detect-secrets checkov"
