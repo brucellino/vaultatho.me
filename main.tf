@@ -9,18 +9,15 @@ terraform {
   required_providers {
     vault = {
       source  = "hashicorp/vault"
-      version = "5.6.0"
+      version = "~> 5"
     }
-    # github = {
-    #   source  = "integrations/github"
-    #   version = "5.42.0"
-    # }
   }
 }
 
+
+
 provider "vault" {
   # Configuration options
-  address            = var.vault_addr
   add_address_to_env = true
   skip_tls_verify    = true
 }

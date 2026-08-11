@@ -17,20 +17,8 @@ permissions:
   statuses: write
 
 jobs:
-  # vpn:
-  #   name: setup Tailscale
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Get Tailscale
-  #       run: curl -fsSL https://tailscale.com/install.sh | sh
-  #     - name: Start tailscale
-  #       run: sudo tailscale up --authkey "${TAILSCALE_AUTHKEY}"
-  #       env:
-  #         TAILSCALE_AUTHKEY: ${{ secrets.TAILSCALE_AUTHKEY }}
-
   validate:
     name: Test
-    # needs: [vpn]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -55,12 +43,17 @@ jobs:
       fail-fast: false
       matrix:
         vault_version:
-          - 1.17.0
-          - 1.16.3
+          - 2.0.0 # latest
+          - 1.21.4 # Current
+          - 1.16.3 # Last
         nomad_version:
-          - 1.11.1
+          - 2.0.0 # latest
+          - 1.11.3 # Current
+          - 1.10.5 # Last
         consul_version:
-          - 1.21.1
+          - 1.22.7 # latest
+          - 1.21.5 # Current
+          - 1.16.6 # Last
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -78,32 +71,21 @@ jobs:
         env:
           TAILSCALE_AUTHKEY: ${{ secrets.TAILSCALE_AUTHKEY }}
       - name: Get Consul
-        run: |
-          wget https://releases.hashicorp.com/consul/${{ matrix.consul_version }}/consul_${{ matrix.consul_version }}_linux_amd64.zip
-          unzip -o consul_${{ matrix.consul_version }}_linux_amd64.zip
-          mv consul ~/consul
+        run: mise install consul@${{ matrix.consul_version }}
       - name: Get Nomad
-        run: |
-          wget https://releases.hashicorp.com/nomad/${{ matrix.nomad_version }}/nomad_${{ matrix.nomad_version }}_linux_amd64.zip
-          unzip -o nomad_${{ matrix.nomad_version }}_linux_amd64.zip
-          mv nomad ~/nomad
+        run: mise install nomad@${{ matrix.nomad_version }}
       - name: Get Vault
-        run: |
-          wget https://releases.hashicorp.com/vault/${{ matrix.vault_version }}/vault_${{ matrix.vault_version }}_linux_amd64.zip
-          unzip -o vault_${{ matrix.vault_version }}_linux_amd64.zip
-          mv vault ~/vault
-      - name: Make vault, nomad and consul executable
-        run: chmod +x ~/vault ~/consul ~/nomad
+        run: mise install vault@${{ matrix.vault_version }}
       - name: Start Consul dev server
-        run: ~/consul agent -dev &
-      # - name: Bootstrap consul ACL
-      #   run: ~/consul acl bootstrap -format=json
+        run: consul agent -dev &
+      - name: Bootstrap consul ACL
+        run: consul acl bootstrap -format=json
       - name: Start Nomad server
-        run: ~/nomad agent -dev -acl-enabled -bootstrap-expect=1 &
+        run: nomad agent -dev -acl-enabled -bootstrap-expect=1 &
       - name: Bootstrap Nomad ACL
-        run: ~/nomad acl bootstrap -json > nomad_acl.json
+        run: nomad acl bootstrap -json > nomad_acl.json
       - name: Start Vault dev server
-        run: ~/vault server -dev &
+        run: vault server -dev &
       - name: init terraform
         run: terraform init
       - name: Plan
@@ -113,6 +95,10 @@ jobs:
           TF_VAR_vault_addr=http://localhost:8200 \
           TF_VAR_consul_token=${{ secrets.CONSUL_TOKEN }} \
           terraform plan
+        env:
+          VAULT_ADDR: http://localhost:8200
+          NOMAD_ADDR: http://localhost:4646
+          CONSUL_HTTP_ADDR: http://localhost:8500
       # - name: stop Vault
       #   run: kill -9 $(jobs -p)
   release:
