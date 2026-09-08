@@ -77,6 +77,13 @@ jobs:
         with:
           install: true
           experimental: true
+          tool_versions: |
+            consul ${{ matrix.consul_version }}
+            nomad ${{ matrix.nomad_version }}
+            vault ${{ matrix.vault_version }}
+          reshim: true
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Connect to Tailscale
         uses: tailscale/github-action@v4
         with:
@@ -84,16 +91,16 @@ jobs:
           oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
           tags: tag:ci
           version: 1.102.3
-      - name: Get tools
-        run: mise install \
-          consul@${{ matrix.consul_version }} \
-          nomad@${{ matrix.nomad_version }} \
-          vault@${{ matrix.vault_version }}
-      - name: Use matrixed tools
-        run: mise use \
-          consul@${{ matrix.consul_version }} \
-          nomad@${{ matrix.nomad_version }} \
-          vault@${{ matrix.vault_version }}
+      # - name: Get tools
+      #   run: mise install \
+      #     consul@${{ matrix.consul_version }} \
+      #     nomad@${{ matrix.nomad_version }} \
+      #     vault@${{ matrix.vault_version }}
+      # - name: Use matrixed tools
+      #   run: mise use \
+      #     consul@${{ matrix.consul_version }} \
+      #     nomad@${{ matrix.nomad_version }} \
+      #     vault@${{ matrix.vault_version }}
       - name: Start Consul dev server
         run: which consul && consul agent -dev &
       - name: Start Nomad server
