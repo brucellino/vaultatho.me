@@ -73,7 +73,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: Create dev env with jdx mise action
-        uses: jdx/mise-action@v3
+        uses: jdx/mise-action@v4
         with:
           install: true
           experimental: true
@@ -84,12 +84,16 @@ jobs:
           oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
           tags: tag:ci
           version: 1.102.3
-      - name: Get Consul
-        run: mise add consul ${{ matrix.consul_version }}
-      - name: Get Nomad
-        run: mise add nomad ${{ matrix.nomad_version }}
-      - name: Get Vault
-        run: mise add vault ${{ matrix.vault_version }}
+      - name: Get tools
+        run: mise install \
+          consul@${{ matrix.consul_version }} \
+          nomad@${{ matrix.nomad_version }} \
+          vault@${{ matrix.vault_version }}
+      - name: Use matrixed tools
+        run: mise use \
+          consul@${{ matrix.consul_version }} \
+          nomad@${{ matrix.nomad_version }} \
+          vault@${{ matrix.vault_version }}
       - name: Start Consul dev server
         run: which consul && consul agent -dev &
       - name: Start Nomad server
