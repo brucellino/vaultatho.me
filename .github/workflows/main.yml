@@ -15,10 +15,23 @@ permissions:
   pull-requests: write
   security-events: write
   statuses: write
+  id-token: write
 
 jobs:
+  vpn:
+    name: setup Tailscale
+    runs-on: ubuntu-latest
+    steps:
+      - name: Connect to Tailscale
+        uses: tailscale/github-action@v4
+        with:
+          oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
+          oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
+          tags: tag:ci
+          version: 1.102.3
   validate:
     name: Test
+    needs: [vpn]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -26,7 +39,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: Create dev env with jdx mise action
-        uses: jdx/mise-action@v3
+        uses: jdx/mise-action@v4
         with:
           install: true
           experimental: true
@@ -42,6 +55,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        # We test the latest releases of each major,
+        # plus necessary legacy versions depending on hardware.
         vault_version:
           - 2.0.0 # latest
           - 1.21.4 # Current
@@ -60,32 +75,42 @@ jobs:
         with:
           fetch-depth: 0
       - name: Create dev env with jdx mise action
-        uses: jdx/mise-action@v3
+        uses: jdx/mise-action@v4
         with:
           install: true
           experimental: true
-      - name: Get Tailscale
-        run: curl -fsSL https://tailscale.com/install.sh | sh
-      - name: Start tailscale
-        run: sudo tailscale up --authkey "${TAILSCALE_AUTHKEY}"
-        env:
-          TAILSCALE_AUTHKEY: ${{ secrets.TAILSCALE_AUTHKEY }}
-      - name: Get Consul
-        run: mise install consul@${{ matrix.consul_version }}
-      - name: Get Nomad
-        run: mise install nomad@${{ matrix.nomad_version }}
-      - name: Get Vault
-        run: mise install vault@${{ matrix.vault_version }}
+          tool_versions: |
+            consul ${{ matrix.consul_version }}
+            nomad ${{ matrix.nomad_version }}
+            vault ${{ matrix.vault_version }}
+          reshim: true
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Connect to Tailscale
+        uses: tailscale/github-action@v4
+        with:
+          oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
+          oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
+          tags: tag:ci
+          version: 1.102.3
+      # - name: Get tools
+      #   run: mise install \
+      #     consul@${{ matrix.consul_version }} \
+      #     nomad@${{ matrix.nomad_version }} \
+      #     vault@${{ matrix.vault_version }}
+      # - name: Use matrixed tools
+      #   run: mise use \
+      #     consul@${{ matrix.consul_version }} \
+      #     nomad@${{ matrix.nomad_version }} \
+      #     vault@${{ matrix.vault_version }}
       - name: Start Consul dev server
-        run: consul agent -dev &
-      - name: Bootstrap consul ACL
-        run: consul acl bootstrap -format=json
+        run: which consul && consul agent -dev &
       - name: Start Nomad server
-        run: nomad agent -dev -acl-enabled -bootstrap-expect=1 &
+        run: which nomad && nomad agent -dev -acl-enabled -bootstrap-expect=1 &
       - name: Bootstrap Nomad ACL
         run: nomad acl bootstrap -json > nomad_acl.json
       - name: Start Vault dev server
-        run: vault server -dev &
+        run: which vault && vault server -dev &
       - name: init terraform
         run: terraform init
       - name: Plan
@@ -105,24 +130,21 @@ jobs:
     needs: [apply]
     name: Release
     runs-on: ubuntu-latest
+    env:
+      MISE_ENV: release
     steps:
       - name: Checkout
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
-      - name: Setup Node.js
-        uses: actions/setup-node@v6
+      - name: Create dev env with jdx mise action
+        uses: jdx/mise-action@v4
         with:
-          node-version: 'lts/iron'
-      - name: Install dependencies
-        run: |
-          npm install -g \
-            semantic-release \
-            '@semantic-release/changelog' \
-            '@semantic-release/github' \
-            '@semantic-release/changelog' \
-            '@semantic-release/git'
+          install: true
+          reshim: true
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: npx semantic-release
+        run: mise task run release
