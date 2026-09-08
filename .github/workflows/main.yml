@@ -15,18 +15,23 @@ permissions:
   pull-requests: write
   security-events: write
   statuses: write
+  id-token: write
 
 jobs:
-  # vpn:
-  #   name: setup Tailscale
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Get Tailscale
-  #       run: curl -fsSL https://tailscale.com/install.sh | sh
-  #     - name: Start tailscale
-  #       run: sudo tailscale up --authkey "${TAILSCALE_AUTHKEY}"
-  #       env:
-  #         TAILSCALE_AUTHKEY: ${{ secrets.TAILSCALE_AUTHKEY }}
+  vpn:
+    name: setup Tailscale
+    runs-on: ubuntu-latest
+    steps:
+      - name: Connect to Tailscale
+        uses: tailscale/github-action@v4
+        with:
+          oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
+          oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
+          tags: tag:ci
+      - name: Tailscale
+        uses: tailscale/github-action@v4
+        with:
+          ping: sense.orca-ordinal.ts.net
 
   validate:
     name: Test
@@ -54,13 +59,18 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        # We test the latest releases of each major,
+        # plus necessary legacy versions depending on hardware.
         vault_version:
-          - 1.17.0
-          - 1.16.3
+          - 1.21.4 # latest v1
+          - 2.1.0
         nomad_version:
-          - 1.11.1
+          - 1.11.3
+          - 2.0.5
         consul_version:
-          - 1.21.1
+          - 1.17.3 # latest ARMv7
+          - 1.22.7 # latest v1
+          - 2.0.3 # latest v2
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -127,7 +137,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: 'lts/iron'
+          node-version: "lts/iron"
       - name: Install dependencies
         run: |
           npm install -g \
