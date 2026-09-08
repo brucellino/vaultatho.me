@@ -34,5 +34,5 @@ ci:
   autofix_prs: true
   autoupdate_commit_msg: "[pre-commit.ci] pre-commit autoupdate"
   autoupdate_schedule: monthly
-  skip: [terraform_fmt, terraform_docs]
+  skip: [terraform_fmt, terraform_trivy, terraform_docs]
   submodules: false
