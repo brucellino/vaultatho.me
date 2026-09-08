@@ -1,0 +1,11 @@
+[tools]
+node = "24"
+npm = "12.0.2"
+"npm:@semantic-release/commit-analyzer" = "13.0.1"
+"npm:@semantic-release/release-notes-generator" = "14.1.1"
+"npm:@semantic-release/changelog" = "7.0.0"
+"npm:@semantic-release/git" = "11.0.1"
+"npm:@semantic-release/github" = "12.0.0"
+
+[tasks.release]
+run = "npx semantic-release"

@@ -2,8 +2,4 @@
 
 [tools]
 prek="0.5.2"
-uv = "0.12.10"
-node = "24"
 terraform = "1.16.1"
-# [tasks]
-# install_deps = "uv pip instal"
