@@ -58,15 +58,16 @@ jobs:
         # We test the latest releases of each major,
         # plus necessary legacy versions depending on hardware.
         vault_version:
-          - 1.21.4 # latest v1
-          - 2.1.0
+          - 2.1.0 # latest
+          - 2.0.4 # Current
         nomad_version:
-          - 1.11.3
-          - 2.0.5
+          - 2.0.5 # latest
+          - 2.0.1 # current
+          - 1.10.5 # Last
         consul_version:
-          - 1.17.3 # latest ARMv7
-          - 1.22.7 # latest v1
-          - 2.0.3 # latest v2
+          - 2.0.3 # latest
+          - 2.0.3 # Current
+          - 1.17.1 # Last
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -118,6 +119,10 @@ jobs:
           TF_VAR_vault_addr=http://localhost:8200 \
           TF_VAR_consul_token=${{ secrets.CONSUL_TOKEN }} \
           terraform plan
+        env:
+          VAULT_ADDR: http://localhost:8200
+          NOMAD_ADDR: http://localhost:4646
+          CONSUL_HTTP_ADDR: http://localhost:8500
       # - name: stop Vault
       #   run: kill -9 $(jobs -p)
   release:
