@@ -58,17 +58,16 @@ jobs:
         # We test the latest releases of each major,
         # plus necessary legacy versions depending on hardware.
         vault_version:
-          - 2.0.0 # latest
-          - 1.21.4 # Current
-          - 1.16.3 # Last
+          - 2.1.0 # latest
+          - 2.0.4 # Current
         nomad_version:
-          - 2.0.0 # latest
-          - 1.11.3 # Current
+          - 2.0.5 # latest
+          - 2.0.1 # current
           - 1.10.5 # Last
         consul_version:
-          - 1.22.7 # latest
-          - 1.21.5 # Current
-          - 1.16.6 # Last
+          - 2.0.3 # latest
+          - 2.0.3 # Current
+          - 1.17.1 # Last
     steps:
       - name: Checkout
         uses: actions/checkout@v6
