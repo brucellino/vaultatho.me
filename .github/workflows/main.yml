@@ -84,10 +84,6 @@ jobs:
           oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
           tags: tag:ci
           version: 1.102.3
-      - name: Tailscale
-        uses: tailscale/github-action@v4
-        with:
-          ping: sense.orca-ordinal.ts.net
       - name: Get Consul
         run: mise add consul {{ matrix.consul_version }}
       - name: Get Nomad
