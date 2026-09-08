@@ -85,11 +85,11 @@ jobs:
           tags: tag:ci
           version: 1.102.3
       - name: Get Consul
-        run: mise add consul {{ matrix.consul_version }}
+        run: mise add consul ${{ matrix.consul_version }}
       - name: Get Nomad
-        run: mise add nomad {{ matrix.nomad_version }}
+        run: mise add nomad ${{ matrix.nomad_version }}
       - name: Get Vault
-        run: mise add vault {{ matrix.vault_version }}
+        run: mise add vault ${{ matrix.vault_version }}
       - name: Start Consul dev server
         run: which consul && consul agent -dev &
       - name: Start Nomad server
