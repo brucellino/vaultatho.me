@@ -81,39 +81,30 @@ jobs:
         with:
           install: true
           experimental: true
-      - name: Get Tailscale
-        run: curl -fsSL https://tailscale.com/install.sh | sh
-      - name: Start tailscale
-        run: sudo tailscale up --authkey "${TAILSCALE_AUTHKEY}"
-        env:
-          TAILSCALE_AUTHKEY: ${{ secrets.TAILSCALE_AUTHKEY }}
+      - name: Connect to Tailscale
+        uses: tailscale/github-action@v4
+        with:
+          oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
+          oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
+          tags: tag:ci
+      - name: Tailscale
+        uses: tailscale/github-action@v4
+        with:
+          ping: sense.orca-ordinal.ts.net
       - name: Get Consul
-        run: |
-          wget https://releases.hashicorp.com/consul/${{ matrix.consul_version }}/consul_${{ matrix.consul_version }}_linux_amd64.zip
-          unzip -o consul_${{ matrix.consul_version }}_linux_amd64.zip
-          mv consul ~/consul
+        run: mise add consul {{ matrix.consul_version }}
       - name: Get Nomad
-        run: |
-          wget https://releases.hashicorp.com/nomad/${{ matrix.nomad_version }}/nomad_${{ matrix.nomad_version }}_linux_amd64.zip
-          unzip -o nomad_${{ matrix.nomad_version }}_linux_amd64.zip
-          mv nomad ~/nomad
+        run: mise add nomad {{ matrix.nomad_version }}
       - name: Get Vault
-        run: |
-          wget https://releases.hashicorp.com/vault/${{ matrix.vault_version }}/vault_${{ matrix.vault_version }}_linux_amd64.zip
-          unzip -o vault_${{ matrix.vault_version }}_linux_amd64.zip
-          mv vault ~/vault
-      - name: Make vault, nomad and consul executable
-        run: chmod +x ~/vault ~/consul ~/nomad
+        run: mise add vault {{ matrix.vault_version }}
       - name: Start Consul dev server
-        run: ~/consul agent -dev &
-      # - name: Bootstrap consul ACL
-      #   run: ~/consul acl bootstrap -format=json
+        run: which consul && consul agent -dev &
       - name: Start Nomad server
-        run: ~/nomad agent -dev -acl-enabled -bootstrap-expect=1 &
+        run: which nomad && nomad agent -dev -acl-enabled -bootstrap-expect=1 &
       - name: Bootstrap Nomad ACL
-        run: ~/nomad acl bootstrap -json > nomad_acl.json
+        run: nomad acl bootstrap -json > nomad_acl.json
       - name: Start Vault dev server
-        run: ~/vault server -dev &
+        run: which vault && vault server -dev &
       - name: init terraform
         run: terraform init
       - name: Plan
