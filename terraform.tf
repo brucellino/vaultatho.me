@@ -1,5 +1,5 @@
 terraform {
-  required_version = "1.14.3"
+  required_version = "1.16.1"
   backend "consul" {
     // address = "sense.station:8500"
     scheme     = "http"
@@ -12,4 +12,12 @@ terraform {
       version = "~> 5"
     }
   }
+}
+
+
+
+provider "vault" {
+  # Configuration options
+  add_address_to_env = true
+  skip_tls_verify    = true
 }
