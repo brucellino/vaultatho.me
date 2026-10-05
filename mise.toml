@@ -1,5 +1,5 @@
 [env]
 
 [tools]
-prek="0.5.2"
+prek="0.5.5"
 terraform = "1.16.1"
