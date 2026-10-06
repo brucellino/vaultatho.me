@@ -176,7 +176,7 @@ resource "vault_jwt_auth_backend" "nomad" {
   description        = "Vault JW Auth"
   path               = "jwt-nomad"
   type               = "jwt"
-  jwks_url           = "http://bare:4646/.well-known/jwks.json"
+  jwks_url           = "http://nomad.service.consul:4646/.well-known/jwks.json"
   jwt_supported_algs = ["RS256", "EdDSA"]
   # default_role       = vault_jwt_auth_backend_role.nomad_jobs.role_name
   default_role = "nomad-workloads"
@@ -194,10 +194,11 @@ resource "vault_jwt_auth_backend_role" "nomad_jobs" {
     "nomad_job_id" = "nomad_job_id"
     "nomad_task"   = "nomad_task"
   }
-  token_type             = "service"
-  token_policies         = [vault_policy.nomad_workloads.name]
-  token_period           = 3600
-  token_explicit_max_ttl = 0
+  token_type              = "service"
+  token_policies          = [vault_policy.nomad_workloads.name, vault_policy.nomad_read.name]
+  token_period            = 3600
+  token_explicit_max_ttl  = 0
+  token_no_default_policy = true
 }
 
 resource "vault_policy" "nomad_workloads" {

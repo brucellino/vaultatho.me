@@ -90,6 +90,8 @@ resource "vault_pki_secret_backend_role" "hah_int_role" {
   ]
   allowed_domains = [
     "*.orca-ordinal.ts.net",
+    "server.dc1.consul",
+    "agent.dc1.consul",
     "*.service.consul",
     "*.node.consul",
     "*.node.dc1.consul",

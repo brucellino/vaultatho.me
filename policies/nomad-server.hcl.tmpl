@@ -59,6 +59,21 @@ path "${pki_mount}/issue/nomad_hah_int_role" {
     capabilities = ["update"]
 }
 
+path "hashiatho.me-v2/data/*" {
+  capabilities = ["read", "list"]
+}
+
+path "hashiatho.me-v2/infra/*" {
+  capabilities = ["read", "list"]
+}
+
+path "pki_hah_nomad_int/issue/nomad_hah_int_role" {
+  capabilities = ["update"]
+}
 path "pki_hah_int/issue/hah_int_role" {
   capabilities = ["update"]
+}
+
+path "github/token" {
+  capabilities = ["create", "read", "update", "delete", "list"]
 }
