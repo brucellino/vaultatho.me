@@ -66,3 +66,7 @@ path "nomad/creds/mgmt" {
 path "sys/storage/raft/snapshot" {
   capabilities = ["read"]
 }
+
+path "pki_platform_services/*" {
+  capabilities = ["read", "list", "create", "update", "delete"]
+}

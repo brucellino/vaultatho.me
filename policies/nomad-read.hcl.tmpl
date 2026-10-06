@@ -54,7 +54,14 @@ path "hashiatho.me-v2/" {
 path "hashiatho.me-v2/*" {
   capabilities = ["read", "list"]
 }
+path "pki_platform_services/*" {
+  capabilities = ["read", "list"]
+}
 
 path "${pki_mount}/issue/nomad_hah_int_role" {
     capabilities = ["update"]
+}
+
+path "pki_hah_nomad_int/issue/nomad_hah_int_role" {
+  capabilities = ["update"]
 }

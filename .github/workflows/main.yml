@@ -35,11 +35,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
       - name: Create dev env with jdx mise action
-        uses: jdx/mise-action@v4
+        uses: jdx/mise-action@v5
         with:
           install: true
           experimental: true
@@ -74,7 +74,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: Create dev env with jdx mise action
-        uses: jdx/mise-action@v4
+        uses: jdx/mise-action@v5
         with:
           install: true
           experimental: true
@@ -133,11 +133,11 @@ jobs:
       MISE_ENV: release
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
       - name: Create dev env with jdx mise action
-        uses: jdx/mise-action@v4
+        uses: jdx/mise-action@v5
         with:
           install: true
           reshim: true

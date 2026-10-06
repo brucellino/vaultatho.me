@@ -17,7 +17,7 @@ Terraform for Vault component of [Hashi@home](https://hashiatho.me)
 
 | Name | Version |
 |------|---------|
-| <a name="provider_vault"></a> [vault](#provider\_vault) | 5.6.0 |
+| <a name="provider_vault"></a> [vault](#provider\_vault) | 5.9.0 |
 
 ## Modules
 

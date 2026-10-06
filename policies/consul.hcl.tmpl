@@ -56,3 +56,11 @@ path "hashiatho.me-v2/" {
 path "hashiatho.me-v2/*" {
   capabilities = ["read", "list"]
 }
+
+path "consul-root-ca/issue/hashi-at-home" {
+  capabilities = ["create", "read", "update"]
+}
+
+path "pki_platform_services/issue/traefik" {
+  capabilities = ["create", "update"]
+}
