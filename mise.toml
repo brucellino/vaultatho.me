@@ -4,5 +4,5 @@ auto_install = true
 [env]
 
 [tools]
-prek="0.5.11"
+prek="0.5.12"
 terraform = "1.17.2"
